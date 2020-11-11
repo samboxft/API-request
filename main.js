@@ -1,20 +1,21 @@
 /// <reference path="jquery-3.5.1.js" />
 
-$(function () {
-  getCountriesAsync().then((countriesArray) => {
-    console.table(countriesArray);
-    populateTable(countriesArray);
-  });
+$(async function () {
+  const countries = await getCountriesAsync();
+  console.table(countries);
+  populateTable(countries);
 });
 
 function getCountriesAsync() {
-    return $.getJSON("https://restcountries.eu/rest/v2/all");
+    return new Promise((resolve) => {
+        $.getJSON("https://restcountries.eu/rest/v2/all").done(countries => resolve(countries));
+    })
 }
 
 function populateTable(countriesArray) {
-    for (let i = 0; i < countriesArray.length; i++) {
-        $("tbody").append(
-            `<tr>
+  for (let i = 0; i < countriesArray.length; i++) {
+    $("tbody").append(
+      `<tr>
             <td>
                   ${countriesArray[i].name}
             </td>
@@ -29,7 +30,6 @@ function populateTable(countriesArray) {
             </td>
 
         </tr> `
-        );
-    }
+    );
+  }
 }
-
